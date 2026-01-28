@@ -1,0 +1,66 @@
+{
+  "cli": {
+    "version": ">= 5.0.0",
+    "appVersionSource": "local"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "android": {
+        "gradleCommand": ":app:assembleDebug",
+        "buildProfile": "debug"
+      },
+      "ios": {
+        "buildConfiguration": "Debug"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease",
+        "buildProfile": "preview"
+      },
+      "ios": {
+        "buildConfiguration": "Release"
+      },
+      "env": {
+        "APP_ENV": "preview"
+      }
+    },
+    "apk": {
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease",
+        "buildProfile": "release"
+      },
+      "env": {
+        "APP_ENV": "production"
+      }
+    },
+    "production": {
+      "distribution": "store",
+      "android": {
+        "buildType": "app-bundle",
+        "gradleCommand": ":app:bundleRelease",
+        "buildProfile": "production"
+      },
+      "ios": {
+        "buildConfiguration": "Release"
+      },
+      "env": {
+        "APP_ENV": "production"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "./google-play-key.json",
+        "track": "internal",
+        "inAppUpdatePriority": 2
+      }
+    }
+  }
+}

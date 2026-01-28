@@ -1,0 +1,99 @@
+# Dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+
+# Native builds
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# Debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# Local env files
+.env*.local
+.env
+
+# TypeScript
+*.tsbuildinfo
+
+# Testing
+coverage/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Temporary files
+*.log
+tmp/
+temp/
+
+# Build outputs
+android/app/build/
+ios/build/
+
+# ProGuard outputs
+proguard-mapping.txt
+proguard-configuration.txt
+proguard-usage.txt
+mapping.txt
+
+# Generated APK/AAB files
+*.apk
+*.aab
+*.abb
+build/outputs/
+
+# EAS Build artifacts
+.eas/
+eas.json.lock
+
+# Google Play credentials
+google-play-key.json
+service-account-key.json
+
+# Gradle
+.gradle/
+gradle-wrapper.jar
+local.properties
+
+# Android Studio
+.idea/
+.gradle
+*.iml
+*.iws
+*.ipr
+out/
+
+# Sentry source maps
+*.js.map
+*.min.js.map
+
+# Build configuration backups
+.env.backup
+eas.json.backup
+
+# Symbol maps and debugging info
+*.symbols.zip
+native-debug-symbols/
+symbols/
+debug-symbols/

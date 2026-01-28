@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npx eas-cli:*)",
+      "Bash(yes:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd EAS project ID and fix owner\n\n- Added EAS projectId UUID for build linking\n- Changed owner to mermaidsinhell \\(personal account\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git config:*)",
+      "Bash(git push:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(python3:*)",
+      "mcp__plugin_serena_serena__check_onboarding_performed",
+      "mcp__plugin_serena_serena__list_dir",
+      "mcp__plugin_serena_serena__read_file",
+      "mcp__plugin_serena_serena__search_for_pattern",
+      "mcp__plugin_serena_serena__replace_content",
+      "mcp__plugin_serena_serena__create_text_file",
+      "WebSearch",
+      "mcp__plugin_serena_serena__activate_project",
+      "mcp__plugin_serena_serena__find_file",
+      "Bash(cat:*)",
+      "mcp__plugin_serena_serena__think_about_collected_information",
+      "mcp__plugin_serena_serena__think_about_task_adherence",
+      "mcp__plugin_serena_serena__replace_symbol_body",
+      "mcp__plugin_serena_serena__think_about_whether_you_are_done",
+      "Bash(cd:*)",
+      "Bash(dir:*)"
+    ]
+  }
+}

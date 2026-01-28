@@ -1,0 +1,115 @@
+name: Build Android APK with EAS
+
+on:
+  push:
+    branches: [main, master, 'claude/*']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Expo and EAS CLI
+        run: npm install -g expo-cli eas-cli
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Configure EAS Project
+        run: |
+          npx eas-cli whoami
+          # Initialize EAS project (creates project on expo.dev with valid UUID)
+          npx eas-cli init --id mcp-server-manager-$(date +%s) --non-interactive || true
+          cat app.json
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Build APK with EAS Cloud
+        run: |
+          # Run cloud build and capture the URL
+          npx eas-cli build --platform android --profile preview --non-interactive --json > build-result.json || true
+          cat build-result.json
+          # Extract APK URL and download
+          APK_URL=$(cat build-result.json | jq -r '.[0].artifacts.buildUrl // empty')
+          if [ -n "$APK_URL" ]; then
+            echo "Downloading APK from: $APK_URL"
+            curl -L -o mcp-server-manager.apk "$APK_URL"
+          else
+            echo "Build may still be in progress. Check expo.dev for status."
+            # Wait for build and get URL
+            npx eas-cli build:list --platform android --status finished --limit 1 --json > latest-build.json
+            cat latest-build.json
+          fi
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Find and prepare APK
+        run: |
+          mkdir -p release
+          if [ -f "mcp-server-manager.apk" ]; then
+            mv mcp-server-manager.apk release/
+          else
+            find . -name "*.apk" -type f | head -1 | xargs -I {} cp {} release/mcp-server-manager.apk
+          fi
+          ls -la release/
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mcp-server-manager-apk
+          path: release/mcp-server-manager.apk
+          retention-days: 90
+
+      - name: Get version
+        id: info
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.info.outputs.version }}-build.${{ github.run_number }}
+          name: MCP Server Manager v${{ steps.info.outputs.version }} (Build ${{ github.run_number }})
+          body: |
+            ## MCP Server Manager for Android
+
+            **Download and install `mcp-server-manager.apk` on your Android device.**
+
+            ### Quick Install
+            1. Download `mcp-server-manager.apk` below
+            2. Open the file on your Android device
+            3. Enable "Install from unknown sources" if prompted
+            4. Tap Install
+
+            ### Features
+            - Run any GitHub MCP server on your phone
+            - Beautiful brutalist UI design
+            - Embedded Node.js runtime
+            - Easy server management (start/stop/delete)
+
+            ---
+            Build: ${{ github.run_number }} | Commit: ${{ github.sha }}
+          files: release/mcp-server-manager.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
