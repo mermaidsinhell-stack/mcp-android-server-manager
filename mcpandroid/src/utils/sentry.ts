@@ -24,8 +24,8 @@ export function initSentry(): void {
     release: `mcp-server-manager@${config.appVersion}`,
     
     // Set sample rate for performance monitoring from config
-    tracesSampleRate: config.sentryTracesSampleRate
-    
+    tracesSampleRate: config.sentryTracesSampleRate,
+
     // Filter out sensitive information
     beforeSend(event, hint) {
       // Remove sensitive data from event
